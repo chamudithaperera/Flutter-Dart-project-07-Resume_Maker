@@ -3,8 +3,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'select_template_page.dart';
 import 'template_cover_page.dart';
 
-class TemplatesPage extends StatelessWidget {
+class TemplatesPage extends StatefulWidget {
   const TemplatesPage({super.key});
+
+  @override
+  State<TemplatesPage> createState() => _TemplatesPageState();
+}
+
+class _TemplatesPageState extends State<TemplatesPage> {
+  String _selectedCategory = 'All';
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +42,11 @@ class TemplatesPage extends StatelessWidget {
 
         // Search Bar
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Container(
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -43,12 +57,12 @@ class TemplatesPage extends StatelessWidget {
               ],
             ),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 hintText: 'Search templates',
-                hintStyle: GoogleFonts.poppins(
-                  color: Colors.grey[400],
-                  fontSize: 14,
-                ),
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[400],
+                    ),
                 prefixIcon: Icon(
                   Icons.search,
                   color: Colors.grey[400],
@@ -57,41 +71,41 @@ class TemplatesPage extends StatelessWidget {
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 12,
+                  vertical: 14,
                 ),
               ),
             ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
 
         // Template Categories
         SizedBox(
-          height: 36,
+          height: 40,
           child: ListView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             children: [
-              _buildCategoryChip('All', true),
-              _buildCategoryChip('Professional', false),
-              _buildCategoryChip('Modern', false),
-              _buildCategoryChip('Creative', false),
-              _buildCategoryChip('Minimal', false),
+              _buildCategoryChip('All'),
+              _buildCategoryChip('Professional'),
+              _buildCategoryChip('Modern'),
+              _buildCategoryChip('Creative'),
+              _buildCategoryChip('Minimal'),
             ],
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
 
         // Templates Grid
         Expanded(
           child: GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.7,
-              crossAxisSpacing: 12,
+              crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
             itemCount: 4,
@@ -130,7 +144,6 @@ class TemplatesPage extends StatelessWidget {
               ];
               final template = templates[index];
               return _buildTemplateCard(
-                context,
                 template['name'] as String,
                 template['type'] as String,
                 template['new'] as bool,
@@ -144,141 +157,148 @@ class TemplatesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryChip(String label, bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        selected: isSelected,
-        label: Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 13,
-            color: isSelected ? Colors.white : Colors.grey[800],
+  Widget _buildCategoryChip(String label) {
+    final isSelected = _selectedCategory == label;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        child: FilterChip(
+          selected: isSelected,
+          onSelected: (selected) {
+            setState(() {
+              _selectedCategory = label;
+            });
+          },
+          label: Text(
+            label,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: isSelected ? Colors.white : Colors.grey[800],
+                ),
           ),
+          backgroundColor: Colors.white,
+          selectedColor: Theme.of(context).colorScheme.primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Colors.grey[300]!,
+            ),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         ),
-        backgroundColor: Colors.grey[100],
-        selectedColor: const Color(0xFF1E88E5),
-        onSelected: (bool selected) {},
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-        visualDensity: VisualDensity.compact,
       ),
     );
   }
 
   Widget _buildTemplateCard(
-    BuildContext context,
     String name,
     String type,
     bool isNew,
     Color color,
     String description,
   ) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TemplateCoverPage(templateName: name),
-            ),
-          );
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 3),
+    return Hero(
+      tag: 'template_$name',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TemplateCoverPage(templateName: name),
               ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Template Preview
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(12),
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
                     ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: ResumePreviewCard(
-                            accentColor:
-                                '#${color.value.toRadixString(16).substring(2)}',
-                            templateName: name,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Center(
+                            child: ResumePreviewCard(
+                              accentColor:
+                                  '#${color.value.toRadixString(16).substring(2)}',
+                              templateName: name,
+                            ),
                           ),
                         ),
-                      ),
-                      if (isNew)
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1E88E5),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'NEW',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.w600,
+                        if (isNew)
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                'NEW',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      fontSize: 10,
+                                    ),
                               ),
                             ),
                           ),
-                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                 ),
-              ),
-              // Template Info
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      description,
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
