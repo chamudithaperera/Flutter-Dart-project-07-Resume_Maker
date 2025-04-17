@@ -17,6 +17,21 @@ class ResumePreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = Color(int.parse(accentColor.replaceAll('#', '0xFF')));
 
+    switch (templateName) {
+      case 'Modern':
+        return _buildModernTemplate(color);
+      case 'Professional':
+        return _buildProfessionalTemplate(color);
+      case 'Creative':
+        return _buildCreativeTemplate(color);
+      case 'Minimal':
+        return _buildMinimalTemplate(color);
+      default:
+        return _buildModernTemplate(color);
+    }
+  }
+
+  Widget _buildModernTemplate(Color color) {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -33,7 +48,6 @@ class ResumePreviewCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Row(
             children: [
               Container(
@@ -52,14 +66,14 @@ class ResumePreviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'John Doe',
+                      'Sarah Johnson',
                       style: GoogleFonts.poppins(
                         fontSize: 8,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      'Software Developer',
+                      'Senior UX Designer',
                       style: GoogleFonts.poppins(
                         fontSize: 6,
                         color: color,
@@ -71,27 +85,28 @@ class ResumePreviewCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-
-          // Contact Info
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.email, size: 6, color: color),
               const SizedBox(width: 2),
               Text(
-                'john@example.com',
+                'sarah@design.com',
+                style: GoogleFonts.poppins(fontSize: 6),
+              ),
+              const SizedBox(width: 4),
+              Icon(Icons.phone, size: 6, color: color),
+              const SizedBox(width: 2),
+              Text(
+                '(555) 123-4567',
                 style: GoogleFonts.poppins(fontSize: 6),
               ),
             ],
           ),
-
           Divider(color: color.withOpacity(0.2), height: 8),
-
-          // Two Column Layout
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Left Column
               Expanded(
                 flex: 3,
                 child: Column(
@@ -100,23 +115,20 @@ class ResumePreviewCard extends StatelessWidget {
                     _buildSection('Experience', color),
                     const SizedBox(height: 2),
                     _buildExperienceItem(
-                      'Senior Developer',
-                      'Tech Corp',
-                      color,
-                    ),
+                        'Lead UX Designer', 'Design Studio Inc.', color),
+                    _buildExperienceItem(
+                        'UX Designer', 'Tech Solutions', color),
                     const SizedBox(height: 4),
                     _buildSection('Education', color),
                     const SizedBox(height: 2),
                     _buildExperienceItem(
-                      'Computer Science',
-                      'Tech University',
-                      color,
-                    ),
+                        'Master in HCI', 'Design University', color),
+                    _buildExperienceItem(
+                        'BA in Design', 'State University', color),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              // Right Column
               Expanded(
                 flex: 2,
                 child: Column(
@@ -128,16 +140,11 @@ class ResumePreviewCard extends StatelessWidget {
                       spacing: 2,
                       runSpacing: 2,
                       children: [
-                        _buildSkillChip('Flutter', color),
-                        _buildSkillChip('React', color),
+                        _buildSkillChip('UI/UX', color),
+                        _buildSkillChip('Figma', color),
+                        _buildSkillChip('Adobe XD', color),
+                        _buildSkillChip('Sketch', color),
                       ],
-                    ),
-                    const SizedBox(height: 4),
-                    _buildSection('Hobbies', color),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Photography',
-                      style: GoogleFonts.poppins(fontSize: 6),
                     ),
                   ],
                 ),
@@ -149,6 +156,423 @@ class ResumePreviewCard extends StatelessWidget {
     );
   }
 
+  Widget _buildProfessionalTemplate(Color color) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: color, width: 1),
+                bottom: BorderSide(color: color, width: 1),
+              ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'MICHAEL ANDERSON',
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'Financial Analyst',
+                  style: GoogleFonts.poppins(
+                    fontSize: 6,
+                    color: color,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.email, size: 6, color: color),
+              const SizedBox(width: 2),
+              Text(
+                'michael@finance.com',
+                style: GoogleFonts.poppins(fontSize: 6),
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: 1,
+                height: 6,
+                color: color,
+              ),
+              Icon(Icons.phone, size: 6, color: color),
+              const SizedBox(width: 2),
+              Text(
+                '(555) 987-6543',
+                style: GoogleFonts.poppins(fontSize: 6),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          _buildProfessionalSection(
+              'Experience',
+              [
+                _buildProfessionalItem(
+                    'Senior Financial Analyst', 'Global Investments', color),
+                _buildProfessionalItem(
+                    'Financial Analyst', 'Banking Corp', color),
+                _buildProfessionalItem(
+                    'Junior Analyst', 'Finance Solutions', color),
+              ],
+              color),
+          const SizedBox(height: 4),
+          _buildProfessionalSection(
+              'Education',
+              [
+                _buildProfessionalItem(
+                    'MBA in Finance', 'Business School', color),
+                _buildProfessionalItem(
+                    'BBA in Economics', 'State University', color),
+              ],
+              color),
+          const SizedBox(height: 4),
+          _buildProfessionalSection(
+              'Skills',
+              [
+                Wrap(
+                  spacing: 4,
+                  children: [
+                    _buildProfessionalSkill('Financial Modeling', color),
+                    _buildProfessionalSkill('Data Analysis', color),
+                    _buildProfessionalSkill('Risk Management', color),
+                    _buildProfessionalSkill('Excel', color),
+                  ],
+                ),
+              ],
+              color),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCreativeTemplate(Color color) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 24,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(4),
+                bottomLeft: Radius.circular(4),
+              ),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 8),
+                Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color,
+                  ),
+                  child: const Icon(
+                    Icons.person,
+                    size: 10,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Icon(Icons.email, size: 8, color: color),
+                const SizedBox(height: 4),
+                Icon(Icons.phone, size: 8, color: color),
+                const SizedBox(height: 4),
+                Icon(Icons.location_on, size: 8, color: color),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Alex Rivera',
+                  style: GoogleFonts.poppins(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  'Creative Director',
+                  style: GoogleFonts.poppins(
+                    fontSize: 6,
+                    color: color,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                _buildCreativeSection('Skills', color),
+                Wrap(
+                  spacing: 2,
+                  runSpacing: 2,
+                  children: [
+                    _buildCreativeSkill('Branding', color),
+                    _buildCreativeSkill('Art Direction', color),
+                    _buildCreativeSkill('Design', color),
+                    _buildCreativeSkill('Leadership', color),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                _buildCreativeSection('Experience', color),
+                _buildCreativeItem('Creative Director', 'Design Agency', color),
+                _buildCreativeItem('Art Director', 'Creative Studio', color),
+                _buildCreativeItem('Senior Designer', 'Media Group', color),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMinimalTemplate(Color color) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Emily Chen',
+            style: GoogleFonts.poppins(
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            'Marketing Manager',
+            style: GoogleFonts.poppins(
+              fontSize: 6,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 6),
+          Container(
+            height: 0.5,
+            color: Colors.grey[300],
+          ),
+          const SizedBox(height: 6),
+          _buildMinimalSection('Experience', [
+            _buildMinimalItem('Marketing Manager', 'Tech Startup'),
+            _buildMinimalItem('Digital Marketing Lead', 'E-commerce Company'),
+            _buildMinimalItem('Marketing Specialist', 'Agency'),
+          ]),
+          const SizedBox(height: 6),
+          _buildMinimalSection('Education', [
+            _buildMinimalItem('MS in Marketing', 'Business University'),
+            _buildMinimalItem('BA in Communications', 'State College'),
+          ]),
+          const SizedBox(height: 6),
+          _buildMinimalSection('Skills', [
+            Wrap(
+              spacing: 4,
+              runSpacing: 2,
+              children: [
+                _buildMinimalSkill('Digital Marketing'),
+                _buildMinimalSkill('Social Media'),
+                _buildMinimalSkill('Analytics'),
+                _buildMinimalSkill('Content Strategy'),
+              ],
+            ),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  // Helper widgets for Professional template
+  Widget _buildProfessionalSection(
+      String title, List<Widget> children, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title.toUpperCase(),
+          style: GoogleFonts.poppins(
+            fontSize: 7,
+            fontWeight: FontWeight.w600,
+            color: color,
+          ),
+        ),
+        ...children,
+      ],
+    );
+  }
+
+  Widget _buildProfessionalItem(String title, String subtitle, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(fontSize: 6, fontWeight: FontWeight.w500),
+        ),
+        Text(
+          subtitle,
+          style: GoogleFonts.poppins(fontSize: 6, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfessionalSkill(String skill, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        border: Border.all(color: color, width: 0.5),
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: Text(
+        skill,
+        style: GoogleFonts.poppins(fontSize: 6, color: color),
+      ),
+    );
+  }
+
+  // Helper widgets for Creative template
+  Widget _buildCreativeSection(String title, Color color) {
+    return Text(
+      title.toUpperCase(),
+      style: GoogleFonts.poppins(
+        fontSize: 7,
+        fontWeight: FontWeight.w600,
+        color: color,
+        letterSpacing: 0.5,
+      ),
+    );
+  }
+
+  Widget _buildCreativeItem(String title, String subtitle, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(fontSize: 6, fontWeight: FontWeight.w500),
+        ),
+        Text(
+          subtitle,
+          style: GoogleFonts.poppins(fontSize: 6, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCreativeSkill(String skill, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        skill,
+        style: GoogleFonts.poppins(fontSize: 6, color: color),
+      ),
+    );
+  }
+
+  // Helper widgets for Minimal template
+  Widget _buildMinimalSection(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(
+            fontSize: 7,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[800],
+          ),
+        ),
+        const SizedBox(height: 2),
+        ...children,
+      ],
+    );
+  }
+
+  Widget _buildMinimalItem(String title, String subtitle) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(fontSize: 6),
+        ),
+        Text(
+          subtitle,
+          style: GoogleFonts.poppins(fontSize: 6, color: Colors.grey[600]),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMinimalSkill(String skill) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: Text(
+        skill,
+        style: GoogleFonts.poppins(fontSize: 6),
+      ),
+    );
+  }
+
+  // Common helper widgets
   Widget _buildSection(String title, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
