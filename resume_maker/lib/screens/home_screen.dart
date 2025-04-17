@@ -15,7 +15,48 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: const Color(0xFF1E88E5),
         foregroundColor: Colors.white,
       ),
-      body: const Center(child: Text('Welcome to Resume Maker!')),
+      body: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E88E5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                // TODO: Navigate to resume creation screen
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: const Color(0xFF1E88E5),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                elevation: 2,
+              ),
+              child: Text(
+                'Create my resume',
+                style: GoogleFonts.poppins(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+          const Expanded(
+            child: Center(child: Text('Welcome to Resume Maker!')),
+          ),
+        ],
+      ),
     );
   }
 }
