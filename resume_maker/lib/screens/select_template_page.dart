@@ -621,136 +621,272 @@ class ResumePreviewCard extends StatelessWidget {
 }
 
 class SelectTemplatePage extends StatelessWidget {
-  const SelectTemplatePage({Key? key}) : super(key: key);
+  const SelectTemplatePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Select Template',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w600,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 120,
+            pinned: true,
+            elevation: 0,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                'Select Template',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                      color: Colors.white,
+                    ),
+              ),
+              centerTitle: true,
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Theme.of(context).colorScheme.primary,
+                      Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 0.6,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-        ),
-        padding: const EdgeInsets.all(16.0),
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          final templates = [
-            {
-              'title': 'Modern',
-              'description':
-                  'Clean and contemporary design with a focus on readability',
-              'color': Colors.blue,
-            },
-            {
-              'title': 'Professional',
-              'description': 'Traditional layout with a professional touch',
-              'color': Colors.green,
-            },
-            {
-              'title': 'Creative',
-              'description': 'Unique design for creative professionals',
-              'color': Colors.purple,
-            },
-            {
-              'title': 'Minimal',
-              'description':
-                  'Simple and elegant design with minimal distractions',
-              'color': Colors.orange,
-            },
-          ];
-
-          final template = templates[index];
-          return _buildTemplateCard(
-            context,
-            template['title'] as String,
-            template['description'] as String,
-            template['color'] as Color,
-          );
-        },
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Choose Your Template',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Select a template that best represents your professional style',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final templates = [
+                    {
+                      'name': 'Modern',
+                      'type': 'Modern',
+                      'new': true,
+                      'color': const Color(0xFF2196F3),
+                      'description':
+                          'Clean and contemporary design with a focus on readability',
+                      'icon': Icons.design_services,
+                    },
+                    {
+                      'name': 'Professional',
+                      'type': 'Professional',
+                      'new': false,
+                      'color': const Color(0xFF4CAF50),
+                      'description':
+                          'Traditional layout with a professional touch',
+                      'icon': Icons.business_center,
+                    },
+                    {
+                      'name': 'Creative',
+                      'type': 'Creative',
+                      'new': true,
+                      'color': const Color(0xFF9C27B0),
+                      'description': 'Unique design for creative professionals',
+                      'icon': Icons.palette,
+                    },
+                    {
+                      'name': 'Minimal',
+                      'type': 'Minimal',
+                      'new': false,
+                      'color': const Color(0xFF607D8B),
+                      'description':
+                          'Simple and elegant design with minimal distractions',
+                      'icon': Icons.format_shapes,
+                    },
+                  ];
+                  final template = templates[index];
+                  return _buildTemplateCard(
+                    context,
+                    template['name'] as String,
+                    template['type'] as String,
+                    template['new'] as bool,
+                    template['color'] as Color,
+                    template['description'] as String,
+                    template['icon'] as IconData,
+                  );
+                },
+                childCount: 4,
+              ),
+            ),
+          ),
+          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+        ],
       ),
     );
   }
 
   Widget _buildTemplateCard(
     BuildContext context,
-    String title,
+    String name,
+    String type,
+    bool isNew,
+    Color color,
     String description,
-    Color accentColor,
+    IconData icon,
   ) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TemplateCoverPage(
-                templateName: title,
+    return Hero(
+      tag: 'template_$name',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TemplateCoverPage(templateName: name),
               ),
-            ),
-          );
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 9 / 12,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: accentColor.withOpacity(0.1),
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(12)),
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
-                child: Center(
-                  child: ResumePreviewCard(
-                    accentColor:
-                        '#${accentColor.value.toRadixString(16).substring(2)}',
-                    templateName: title,
-                  ),
-                ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: accentColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.1),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Icon(
+                            icon,
+                            size: 48,
+                            color: color.withOpacity(0.5),
+                          ),
+                        ),
+                        if (isNew)
+                          Positioned(
+                            top: 12,
+                            right: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                'NEW',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      fontSize: 10,
+                                    ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 1),
-                  Text(
-                    description,
-                    style: GoogleFonts.poppins(
-                      fontSize: 9,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            icon,
+                            size: 20,
+                            color: color,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                                  color: color,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          'Use Template',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
