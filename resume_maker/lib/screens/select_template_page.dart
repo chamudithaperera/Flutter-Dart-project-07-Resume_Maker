@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'resume_form_page.dart';
 
 class SelectTemplatePage extends StatelessWidget {
   const SelectTemplatePage({super.key});
@@ -192,7 +193,12 @@ class SelectTemplatePage extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to resume creation with selected template
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResumeFormPage(templateName: name),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
