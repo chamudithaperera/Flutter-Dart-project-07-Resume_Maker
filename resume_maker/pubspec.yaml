@@ -38,6 +38,7 @@ dependencies:
   pdf: ^3.10.7
   path_provider: ^2.1.2
   image_picker: ^1.0.7
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

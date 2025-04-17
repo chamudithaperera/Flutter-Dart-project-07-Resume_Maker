@@ -21,7 +21,7 @@ class ResumePreviewCard extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -30,140 +30,162 @@ class ResumePreviewCard extends StatelessWidget {
           ),
         ],
       ),
-      child: SingleChildScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header
-            Row(
-              children: [
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: color.withOpacity(0.1),
-                    border: Border.all(color: color, width: 1.5),
-                  ),
-                  child: Icon(Icons.person, color: color, size: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withOpacity(0.1),
+                  border: Border.all(color: color, width: 1),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'John Doe',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                        ),
+                child: Icon(Icons.person, color: color, size: 12),
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'John Doe',
+                      style: GoogleFonts.poppins(
+                        fontSize: 8,
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        'Software Developer',
-                        style: GoogleFonts.poppins(
-                          fontSize: 8,
-                          color: color,
-                        ),
+                    ),
+                    Text(
+                      'Software Developer',
+                      style: GoogleFonts.poppins(
+                        fontSize: 6,
+                        color: color,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Contact Info
-            Wrap(
-              spacing: 4,
-              runSpacing: 2,
-              children: [
-                _buildContactItem(Icons.email, 'john@example.com', 8),
-                _buildContactItem(Icons.phone, '+1 234 567 890', 8),
-                _buildContactItem(Icons.location_on, 'New York, USA', 8),
-              ],
-            ),
-            const SizedBox(height: 8),
-
-            // Experience Preview
-            Text(
-              'EXPERIENCE',
-              style: GoogleFonts.poppins(
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                color: color,
               ),
-            ),
-            const SizedBox(height: 2),
-            _buildExperienceItem(
-              'Senior Developer',
-              'Tech Corp',
-              '2020 - Present',
-              8,
-            ),
-            const SizedBox(height: 6),
+            ],
+          ),
+          const SizedBox(height: 4),
 
-            // Skills Preview
-            Text(
-              'SKILLS',
-              style: GoogleFonts.poppins(
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                color: color,
+          // Contact Info
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.email, size: 6, color: color),
+              const SizedBox(width: 2),
+              Text(
+                'john@example.com',
+                style: GoogleFonts.poppins(fontSize: 6),
               ),
-            ),
-            const SizedBox(height: 2),
-            Wrap(
-              spacing: 2,
-              runSpacing: 2,
-              children: [
-                _buildSkillChip('Flutter', color, 8),
-                _buildSkillChip('Dart', color, 8),
-                _buildSkillChip('Firebase', color, 8),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+
+          Divider(color: color.withOpacity(0.2), height: 8),
+
+          // Two Column Layout
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Left Column
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSection('Experience', color),
+                    const SizedBox(height: 2),
+                    _buildExperienceItem(
+                      'Senior Developer',
+                      'Tech Corp',
+                      color,
+                    ),
+                    const SizedBox(height: 4),
+                    _buildSection('Education', color),
+                    const SizedBox(height: 2),
+                    _buildExperienceItem(
+                      'Computer Science',
+                      'Tech University',
+                      color,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Right Column
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSection('Skills', color),
+                    const SizedBox(height: 2),
+                    Wrap(
+                      spacing: 2,
+                      runSpacing: 2,
+                      children: [
+                        _buildSkillChip('Flutter', color),
+                        _buildSkillChip('React', color),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    _buildSection('Hobbies', color),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Photography',
+                      style: GoogleFonts.poppins(fontSize: 6),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildContactItem(IconData icon, String text, double fontSize) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+  Widget _buildSection(String title, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 10, color: Colors.grey[600]),
-        const SizedBox(width: 2),
         Text(
-          text,
-          style: GoogleFonts.poppins(fontSize: fontSize),
+          title.toUpperCase(),
+          style: GoogleFonts.poppins(
+            fontSize: 6,
+            fontWeight: FontWeight.w600,
+            color: color,
+            letterSpacing: 0.5,
+          ),
+        ),
+        Container(
+          height: 1,
+          width: 12,
+          color: color,
         ),
       ],
     );
   }
 
-  Widget _buildExperienceItem(
-    String title,
-    String company,
-    String duration,
-    double fontSize,
-  ) {
+  Widget _buildExperienceItem(String title, String subtitle, Color color) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
           style: GoogleFonts.poppins(
-            fontSize: fontSize,
+            fontSize: 6,
             fontWeight: FontWeight.w500,
           ),
         ),
         Text(
-          '$company • $duration',
+          subtitle,
           style: GoogleFonts.poppins(
-            fontSize: fontSize - 1,
+            fontSize: 6,
             color: Colors.grey[600],
           ),
         ),
@@ -171,9 +193,9 @@ class ResumePreviewCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSkillChip(String skill, Color color, double fontSize) {
+  Widget _buildSkillChip(String skill, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(2),
@@ -181,7 +203,7 @@ class ResumePreviewCard extends StatelessWidget {
       child: Text(
         skill,
         style: GoogleFonts.poppins(
-          fontSize: fontSize - 1,
+          fontSize: 6,
           color: color,
         ),
       ),

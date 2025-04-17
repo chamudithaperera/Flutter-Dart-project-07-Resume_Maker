@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:io';
 import '../models/resume_data.dart';
 import '../services/pdf_service.dart';
@@ -282,49 +283,63 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
                       const SizedBox(height: 16),
 
                       // Contact Information
-                      Wrap(
-                        spacing: 16,
-                        runSpacing: 8,
-                        children: [
-                          _buildContactItem(
-                              Icons.email, widget.resumeData.email),
-                          _buildContactItem(
-                              Icons.phone, widget.resumeData.phone),
-                          _buildContactItem(
-                              Icons.location_on, widget.resumeData.address),
-                        ],
-                      ),
-                      if (widget.resumeData.socialMedia.isNotEmpty) ...[
-                        const SizedBox(height: 16),
-                        // Social Media Links
-                        Wrap(
+                      Container(
+                        width: double.infinity,
+                        child: Wrap(
                           spacing: 16,
                           runSpacing: 8,
+                          alignment: WrapAlignment.start,
                           children: [
-                            if (widget.resumeData.socialMedia['linkedin'] !=
-                                null)
-                              _buildContactItem(
-                                Icons.link,
-                                widget.resumeData.socialMedia['linkedin']!,
-                              ),
-                            if (widget.resumeData.socialMedia['github'] != null)
-                              _buildContactItem(
-                                Icons.code,
-                                widget.resumeData.socialMedia['github']!,
-                              ),
-                            if (widget.resumeData.socialMedia['twitter'] !=
-                                null)
-                              _buildContactItem(
-                                Icons.alternate_email,
-                                widget.resumeData.socialMedia['twitter']!,
-                              ),
-                            if (widget.resumeData.socialMedia['portfolio'] !=
-                                null)
-                              _buildContactItem(
-                                Icons.web,
-                                widget.resumeData.socialMedia['portfolio']!,
-                              ),
+                            _buildContactItem(
+                                Icons.email, widget.resumeData.email),
+                            _buildContactItem(
+                                Icons.phone, widget.resumeData.phone),
+                            _buildContactItem(
+                                Icons.location_on, widget.resumeData.address),
                           ],
+                        ),
+                      ),
+
+                      // Social Media Links
+                      if (widget.resumeData.socialMedia.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          width: double.infinity,
+                          child: Wrap(
+                            spacing: 16,
+                            runSpacing: 8,
+                            alignment: WrapAlignment.start,
+                            children: [
+                              if (widget.resumeData.socialMedia['linkedin'] !=
+                                  null)
+                                _buildContactItem(
+                                  FontAwesomeIcons.linkedin,
+                                  widget.resumeData.socialMedia['linkedin']!,
+                                  isBrandIcon: true,
+                                ),
+                              if (widget.resumeData.socialMedia['github'] !=
+                                  null)
+                                _buildContactItem(
+                                  FontAwesomeIcons.github,
+                                  widget.resumeData.socialMedia['github']!,
+                                  isBrandIcon: true,
+                                ),
+                              if (widget.resumeData.socialMedia['twitter'] !=
+                                  null)
+                                _buildContactItem(
+                                  FontAwesomeIcons.twitter,
+                                  widget.resumeData.socialMedia['twitter']!,
+                                  isBrandIcon: true,
+                                ),
+                              if (widget.resumeData.socialMedia['portfolio'] !=
+                                  null)
+                                _buildContactItem(
+                                  FontAwesomeIcons.globe,
+                                  widget.resumeData.socialMedia['portfolio']!,
+                                  isBrandIcon: true,
+                                ),
+                            ],
+                          ),
                         ),
                       ],
                       const SizedBox(height: 24),
@@ -433,15 +448,21 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
     );
   }
 
-  Widget _buildContactItem(IconData icon, String text) {
+  Widget _buildContactItem(IconData icon, String text,
+      {bool isBrandIcon = false}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 14, color: accentColor),
+        isBrandIcon
+            ? FaIcon(icon, size: 14, color: accentColor)
+            : Icon(icon, size: 14, color: accentColor),
         const SizedBox(width: 4),
-        Text(
-          text,
-          style: GoogleFonts.poppins(fontSize: 10),
+        Flexible(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(fontSize: 10),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );
@@ -483,6 +504,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
@@ -491,6 +513,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
               fontSize: 10,
               color: Colors.grey[700],
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             exp.location,
@@ -499,6 +522,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
               color: Colors.grey[600],
               fontStyle: FontStyle.italic,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           if (exp.responsibilities.isNotEmpty) ...[
             const SizedBox(height: 4),
@@ -513,6 +537,8 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
                       child: Text(
                         resp,
                         style: GoogleFonts.poppins(fontSize: 10),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
                     ),
                   ],
@@ -537,11 +563,13 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 2),
           Text(
             edu.institution,
             style: GoogleFonts.poppins(fontSize: 10),
+            overflow: TextOverflow.ellipsis,
           ),
           Text(
             '${edu.duration} • ${edu.location}',
@@ -550,6 +578,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
               color: Colors.grey[600],
               fontStyle: FontStyle.italic,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
