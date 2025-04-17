@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'resume_form_page.dart';
+import '../services/template_service.dart';
+import 'template_cover_page.dart';
 
 class ResumePreviewCard extends StatelessWidget {
   final String accentColor;
@@ -189,59 +190,60 @@ class ResumePreviewCard extends StatelessWidget {
 }
 
 class SelectTemplatePage extends StatelessWidget {
-  const SelectTemplatePage({super.key});
+  const SelectTemplatePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // Calculate the width based on screen size
-    final screenWidth = MediaQuery.of(context).size.width;
-    final cardWidth = (screenWidth - 48) /
-        2; // 2 columns with 16px padding on each side and 16px between
-    final cardHeight = cardWidth * 14 / 9; // 9:14 aspect ratio
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Template', style: GoogleFonts.poppins()),
+        title: Text(
+          'Select Template',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.all(16),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 16,
-          childAspectRatio: 9 / 14, // 9:14 aspect ratio
+          childAspectRatio: 0.6,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
         ),
+        padding: const EdgeInsets.all(16.0),
         itemCount: 4,
         itemBuilder: (context, index) {
           final templates = [
             {
               'title': 'Modern',
-              'description': 'A clean and modern design with a sidebar',
-              'accentColor': '#1E88E5',
+              'description':
+                  'Clean and contemporary design with a focus on readability',
+              'color': Colors.blue,
             },
             {
               'title': 'Professional',
-              'description': 'Traditional layout with a professional look',
-              'accentColor': '#2E7D32',
+              'description': 'Traditional layout with a professional touch',
+              'color': Colors.green,
             },
             {
               'title': 'Creative',
               'description': 'Unique design for creative professionals',
-              'accentColor': '#C2185B',
+              'color': Colors.purple,
             },
             {
               'title': 'Minimal',
-              'description': 'Simple and elegant design',
-              'accentColor': '#455A64',
+              'description':
+                  'Simple and elegant design with minimal distractions',
+              'color': Colors.orange,
             },
           ];
 
           final template = templates[index];
           return _buildTemplateCard(
             context,
-            template['title']!,
-            template['description']!,
-            template['accentColor']!,
+            template['title'] as String,
+            template['description'] as String,
+            template['color'] as Color,
           );
         },
       ),
@@ -252,10 +254,10 @@ class SelectTemplatePage extends StatelessWidget {
     BuildContext context,
     String title,
     String description,
-    String accentColor,
+    Color accentColor,
   ) {
     return Card(
-      clipBehavior: Clip.antiAlias,
+      elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -264,9 +266,8 @@ class SelectTemplatePage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ResumeFormPage(
+              builder: (context) => TemplateCoverPage(
                 templateName: title,
-                accentColor: accentColor,
               ),
             ),
           );
@@ -274,46 +275,48 @@ class SelectTemplatePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Preview image - 80% height
-            Expanded(
-              flex: 8,
-              child: ResumePreviewCard(
-                accentColor: accentColor,
-                templateName: title,
-              ),
-            ),
-            // Template name - 10% height
-            Expanded(
-              flex: 1,
+            AspectRatio(
+              aspectRatio: 9 / 12,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                decoration: BoxDecoration(
+                  color: accentColor.withOpacity(0.1),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
+                ),
+                child: Center(
+                  child: ResumePreviewCard(
+                    accentColor:
+                        '#${accentColor.value.toRadixString(16).substring(2)}',
+                    templateName: title,
                   ),
                 ),
               ),
             ),
-            // Template category - 10% height
-            Expanded(
-              flex: 1,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  description,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: accentColor,
+                    ),
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                  const SizedBox(height: 1),
+                  Text(
+                    description,
+                    style: GoogleFonts.poppins(
+                      fontSize: 9,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
           ],
