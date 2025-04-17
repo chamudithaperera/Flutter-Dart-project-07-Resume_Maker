@@ -13,7 +13,7 @@ class ResumeFormPage extends StatefulWidget {
 class _ResumeFormPageState extends State<ResumeFormPage> {
   int _currentStep = 0;
   final _formKey = GlobalKey<FormState>();
-  
+
   // Form data
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -70,22 +70,58 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
               });
             }
           },
+          controlsBuilder: (context, details) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Row(
+                children: [
+                  if (_currentStep > 0)
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: details.onStepCancel,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[200],
+                          foregroundColor: Colors.black87,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        child: Text(
+                          'Back',
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (_currentStep > 0) const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: details.onStepContinue,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1E88E5),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: Text(
+                        _currentStep == 5 ? 'Create Resume' : 'Next',
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
           steps: [
-            // Personal Information
+            // Basic Information
             Step(
-              title: Text('Personal Information', style: GoogleFonts.poppins()),
+              title: Text('Basic Information', style: GoogleFonts.poppins()),
               content: Column(
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Full Name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    decoration: _inputDecoration('Full Name'),
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
+                      if (value?.isEmpty ?? true) {
                         return 'Please enter your name';
                       }
                       return null;
@@ -94,13 +130,14 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _addressController,
-                    decoration: InputDecoration(
-                      labelText: 'Address',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    decoration: _inputDecoration('Address'),
                     maxLines: 2,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) {
+                        return 'Please enter your address';
+                      }
+                      return null;
+                    },
                   ),
                 ],
               ),
@@ -114,40 +151,40 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                 children: [
                   ..._contactControllers.asMap().entries.map((entry) {
                     int idx = entry.key;
+                    var controller = entry.value;
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: Row(
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: entry.value,
-                              decoration: InputDecoration(
-                                labelText: 'Contact Number ${idx + 1}',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
+                              controller: controller,
+                              decoration: _inputDecoration('Contact Number'),
                               keyboardType: TextInputType.phone,
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter a contact number';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           const SizedBox(width: 8),
                           if (_contactControllers.length > 1)
                             IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
+                              icon: const Icon(Icons.remove_circle_outline),
+                              color: Colors.red,
                               onPressed: () => _removeContact(idx),
                             ),
                         ],
                       ),
                     );
                   }).toList(),
-                  ElevatedButton.icon(
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
                     onPressed: _addContact,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Contact'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E88E5),
-                      foregroundColor: Colors.white,
-                    ),
+                    label: Text('Add Contact', style: GoogleFonts.poppins()),
                   ),
                 ],
               ),
@@ -161,6 +198,7 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                 children: [
                   ..._socialMedia.asMap().entries.map((entry) {
                     int idx = entry.key;
+                    var social = entry.value;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: Column(
@@ -169,44 +207,47 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  controller: entry.value.platformController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Platform Name',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
+                                  controller: social.platformController,
+                                  decoration: _inputDecoration('Platform Name'),
+                                  validator: (value) {
+                                    if (value?.isEmpty ?? true) {
+                                      return 'Please enter platform name';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 8),
                               if (_socialMedia.length > 1)
                                 IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                  color: Colors.red,
                                   onPressed: () => _removeSocialMedia(idx),
                                 ),
                             ],
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
-                            controller: entry.value.urlController,
-                            decoration: InputDecoration(
-                              labelText: 'URL',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+                            controller: social.urlController,
+                            decoration: _inputDecoration('Profile URL'),
+                            validator: (value) {
+                              if (value?.isEmpty ?? true) {
+                                return 'Please enter profile URL';
+                              }
+                              return null;
+                            },
                           ),
                         ],
                       ),
                     );
                   }).toList(),
-                  ElevatedButton.icon(
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
                     onPressed: _addSocialMedia,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Social Media'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E88E5),
-                      foregroundColor: Colors.white,
+                    label: Text(
+                      'Add Social Media',
+                      style: GoogleFonts.poppins(),
                     ),
                   ),
                 ],
@@ -221,67 +262,76 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                 children: [
                   ..._education.asMap().entries.map((entry) {
                     int idx = entry.key;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      controller: entry.value.timeController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Time Period',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
+                    var education = entry.value;
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Education ${idx + 1}',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: entry.value.qualificationController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Qualification',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: entry.value.instituteController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Institute',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (_education.length > 1)
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _removeEducation(idx),
-                                ),
-                            ],
-                          ),
-                        ],
+                                if (_education.length > 1)
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.remove_circle_outline,
+                                    ),
+                                    color: Colors.red,
+                                    onPressed: () => _removeEducation(idx),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: education.timeController,
+                              decoration: _inputDecoration('Time Period'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter time period';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: education.qualificationController,
+                              decoration: _inputDecoration('Qualification'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter qualification';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: education.instituteController,
+                              decoration: _inputDecoration('Institute'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter institute';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
-                  ElevatedButton.icon(
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
                     onPressed: _addEducation,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Education'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E88E5),
-                      foregroundColor: Colors.white,
-                    ),
+                    label: Text('Add Education', style: GoogleFonts.poppins()),
                   ),
                 ],
               ),
@@ -295,67 +345,76 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                 children: [
                   ..._experience.asMap().entries.map((entry) {
                     int idx = entry.key;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      controller: entry.value.timeController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Time Period',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
+                    var experience = entry.value;
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Experience ${idx + 1}',
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: entry.value.positionController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Position',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: entry.value.companyController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Company',
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (_experience.length > 1)
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () => _removeExperience(idx),
-                                ),
-                            ],
-                          ),
-                        ],
+                                if (_experience.length > 1)
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.remove_circle_outline,
+                                    ),
+                                    color: Colors.red,
+                                    onPressed: () => _removeExperience(idx),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: experience.timeController,
+                              decoration: _inputDecoration('Time Period'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter time period';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: experience.positionController,
+                              decoration: _inputDecoration('Position'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter position';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            TextFormField(
+                              controller: experience.companyController,
+                              decoration: _inputDecoration('Company'),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter company';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }).toList(),
-                  ElevatedButton.icon(
+                  const SizedBox(height: 8),
+                  OutlinedButton.icon(
                     onPressed: _addExperience,
                     icon: const Icon(Icons.add),
-                    label: const Text('Add Experience'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E88E5),
-                      foregroundColor: Colors.white,
-                    ),
+                    label: Text('Add Experience', style: GoogleFonts.poppins()),
                   ),
                 ],
               ),
@@ -366,32 +425,11 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
             Step(
               title: Text('Review', style: GoogleFonts.poppins()),
               content: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Review your information',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // TODO: Generate resume
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1E88E5),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: Text(
-                      'Generate Resume',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    'Please review your information before creating the resume.',
+                    style: GoogleFonts.poppins(fontSize: 16),
                   ),
                 ],
               ),
@@ -400,6 +438,15 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           ],
         ),
       ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: GoogleFonts.poppins(),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     );
   }
 
@@ -488,4 +535,4 @@ class Experience {
     positionController.dispose();
     companyController.dispose();
   }
-} 
+}
