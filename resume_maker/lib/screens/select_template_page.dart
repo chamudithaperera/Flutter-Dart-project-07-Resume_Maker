@@ -193,41 +193,57 @@ class SelectTemplatePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Calculate the width based on screen size
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = (screenWidth - 48) /
+        2; // 2 columns with 16px padding on each side and 16px between
+    final cardHeight = cardWidth * 14 / 9; // 9:14 aspect ratio
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Select Template', style: GoogleFonts.poppins()),
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
+      body: GridView.builder(
         padding: const EdgeInsets.all(16),
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        children: [
-          _buildTemplateCard(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 9 / 14, // 9:14 aspect ratio
+        ),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          final templates = [
+            {
+              'title': 'Modern',
+              'description': 'A clean and modern design with a sidebar',
+              'accentColor': '#1E88E5',
+            },
+            {
+              'title': 'Professional',
+              'description': 'Traditional layout with a professional look',
+              'accentColor': '#2E7D32',
+            },
+            {
+              'title': 'Creative',
+              'description': 'Unique design for creative professionals',
+              'accentColor': '#C2185B',
+            },
+            {
+              'title': 'Minimal',
+              'description': 'Simple and elegant design',
+              'accentColor': '#455A64',
+            },
+          ];
+
+          final template = templates[index];
+          return _buildTemplateCard(
             context,
-            'Modern',
-            'A clean and modern design with a sidebar',
-            '#1E88E5',
-          ),
-          _buildTemplateCard(
-            context,
-            'Professional',
-            'Traditional layout with a professional look',
-            '#2E7D32',
-          ),
-          _buildTemplateCard(
-            context,
-            'Creative',
-            'Unique design for creative professionals',
-            '#C2185B',
-          ),
-          _buildTemplateCard(
-            context,
-            'Minimal',
-            'Simple and elegant design',
-            '#455A64',
-          ),
-        ],
+            template['title']!,
+            template['description']!,
+            template['accentColor']!,
+          );
+        },
       ),
     );
   }
