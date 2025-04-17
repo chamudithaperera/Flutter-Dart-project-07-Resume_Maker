@@ -17,43 +17,50 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E88E5),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
+          const SizedBox(height: 20),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ElevatedButton(
               onPressed: () {
                 // TODO: Navigate to resume creation screen
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: const Color(0xFF1E88E5),
+                backgroundColor: const Color(0xFF1E88E5),
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                elevation: 2,
+                elevation: 4,
+                shadowColor: const Color(0xFF1E88E5).withOpacity(0.5),
               ),
-              child: Text(
-                'Create my resume',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_circle_outline, size: 24),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Create my resume',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+
+          const SizedBox(height: 30),
+
           const Expanded(
-            child: Center(child: Text('Welcome to Resume Maker!')),
+            child: Center(
+              child: Text(
+                'Welcome to Resume Maker!',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
           ),
         ],
       ),
