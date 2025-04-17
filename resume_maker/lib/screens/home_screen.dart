@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'templates_page.dart';
+import 'select_template_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,7 +27,12 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ElevatedButton(
               onPressed: () {
-                // TODO: Navigate to resume creation screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SelectTemplatePage(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1E88E5),
