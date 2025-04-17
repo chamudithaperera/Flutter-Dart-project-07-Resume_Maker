@@ -28,6 +28,12 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
   final List<TextEditingController> _experienceControllers = [];
   final List<String> _hobbies = [];
 
+  // Social media controllers
+  final _linkedinController = TextEditingController();
+  final _githubController = TextEditingController();
+  final _twitterController = TextEditingController();
+  final _portfolioController = TextEditingController();
+
   final _nameController = TextEditingController();
   final _titleController = TextEditingController();
   final _emailController = TextEditingController();
@@ -43,6 +49,10 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     _phoneController.dispose();
     _addressController.dispose();
     _summaryController.dispose();
+    _linkedinController.dispose();
+    _githubController.dispose();
+    _twitterController.dispose();
+    _portfolioController.dispose();
     for (var controller in _skillControllers) {
       controller.dispose();
     }
@@ -143,6 +153,16 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
           ),
         ),
         hobbies: _hobbies,
+        socialMedia: {
+          if (_linkedinController.text.isNotEmpty)
+            'linkedin': _linkedinController.text,
+          if (_githubController.text.isNotEmpty)
+            'github': _githubController.text,
+          if (_twitterController.text.isNotEmpty)
+            'twitter': _twitterController.text,
+          if (_portfolioController.text.isNotEmpty)
+            'portfolio': _portfolioController.text,
+        },
       );
 
       Navigator.push(
@@ -239,6 +259,47 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
                     validator: (value) => value?.isEmpty ?? true
                         ? 'Please enter your address'
                         : null,
+                  ),
+                ],
+              ),
+            ),
+
+            // Social Media Section
+            _buildSection(
+              'Social Media',
+              Column(
+                children: [
+                  TextFormField(
+                    controller: _linkedinController,
+                    decoration: const InputDecoration(
+                      labelText: 'LinkedIn Profile',
+                      prefixIcon: Icon(Icons.link),
+                      hintText: 'https://linkedin.com/in/username',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _githubController,
+                    decoration: const InputDecoration(
+                      labelText: 'GitHub Profile',
+                      prefixIcon: Icon(Icons.code),
+                      hintText: 'https://github.com/username',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _twitterController,
+                    decoration: const InputDecoration(
+                      labelText: 'Twitter Profile',
+                      prefixIcon: Icon(Icons.alternate_email),
+                      hintText: 'https://twitter.com/username',
+                    ),
+                  ),
+                  TextFormField(
+                    controller: _portfolioController,
+                    decoration: const InputDecoration(
+                      labelText: 'Portfolio Website',
+                      prefixIcon: Icon(Icons.web),
+                      hintText: 'https://yourportfolio.com',
+                    ),
                   ),
                 ],
               ),

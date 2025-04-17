@@ -11,6 +11,7 @@ class ResumeData {
   final List<Experience> experience;
   final List<String> hobbies;
   final String accentColor;
+  final Map<String, String> socialMedia;
 
   ResumeData({
     required this.name,
@@ -25,6 +26,7 @@ class ResumeData {
     required this.experience,
     this.hobbies = const [],
     this.accentColor = '#FFA726',
+    this.socialMedia = const {},
   });
 }
 

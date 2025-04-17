@@ -294,6 +294,39 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
                               Icons.location_on, widget.resumeData.address),
                         ],
                       ),
+                      if (widget.resumeData.socialMedia.isNotEmpty) ...[
+                        const SizedBox(height: 16),
+                        // Social Media Links
+                        Wrap(
+                          spacing: 16,
+                          runSpacing: 8,
+                          children: [
+                            if (widget.resumeData.socialMedia['linkedin'] !=
+                                null)
+                              _buildContactItem(
+                                Icons.link,
+                                widget.resumeData.socialMedia['linkedin']!,
+                              ),
+                            if (widget.resumeData.socialMedia['github'] != null)
+                              _buildContactItem(
+                                Icons.code,
+                                widget.resumeData.socialMedia['github']!,
+                              ),
+                            if (widget.resumeData.socialMedia['twitter'] !=
+                                null)
+                              _buildContactItem(
+                                Icons.alternate_email,
+                                widget.resumeData.socialMedia['twitter']!,
+                              ),
+                            if (widget.resumeData.socialMedia['portfolio'] !=
+                                null)
+                              _buildContactItem(
+                                Icons.web,
+                                widget.resumeData.socialMedia['portfolio']!,
+                              ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 24),
 
                       // Two-column layout for content

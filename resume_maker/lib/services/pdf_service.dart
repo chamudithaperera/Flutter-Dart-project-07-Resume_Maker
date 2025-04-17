@@ -70,6 +70,23 @@ class PDFService {
                 ],
               ),
 
+              if (resumeData.socialMedia.isNotEmpty) ...[
+                pw.SizedBox(height: 10),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                  children: [
+                    if (resumeData.socialMedia['linkedin'] != null)
+                      pw.Text(resumeData.socialMedia['linkedin']!),
+                    if (resumeData.socialMedia['github'] != null)
+                      pw.Text(resumeData.socialMedia['github']!),
+                    if (resumeData.socialMedia['twitter'] != null)
+                      pw.Text(resumeData.socialMedia['twitter']!),
+                    if (resumeData.socialMedia['portfolio'] != null)
+                      pw.Text(resumeData.socialMedia['portfolio']!),
+                  ],
+                ),
+              ],
+
               pw.SizedBox(height: 20),
 
               // Professional Summary
