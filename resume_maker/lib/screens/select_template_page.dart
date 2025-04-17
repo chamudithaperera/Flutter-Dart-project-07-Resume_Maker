@@ -45,113 +45,113 @@ class ResumePreviewCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color.withOpacity(0.1),
-                  border: Border.all(color: color, width: 1),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: color.withOpacity(0.1),
+                    border: Border.all(color: color, width: 1),
+                  ),
+                  child: Icon(Icons.person, color: color, size: 10),
                 ),
-                child: Icon(Icons.person, color: color, size: 12),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Sarah Johnson',
-                      style: GoogleFonts.poppins(
-                        fontSize: 8,
-                        fontWeight: FontWeight.w600,
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Sarah Johnson',
+                        style: GoogleFonts.poppins(
+                          fontSize: 7,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Senior UX Designer',
-                      style: GoogleFonts.poppins(
-                        fontSize: 6,
-                        color: color,
+                      Text(
+                        'Senior UX Designer',
+                        style: GoogleFonts.poppins(
+                          fontSize: 5,
+                          color: color,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.email, size: 6, color: color),
-              const SizedBox(width: 2),
-              Text(
-                'sarah@design.com',
-                style: GoogleFonts.poppins(fontSize: 6),
-              ),
-              const SizedBox(width: 4),
-              Icon(Icons.phone, size: 6, color: color),
-              const SizedBox(width: 2),
-              Text(
-                '(555) 123-4567',
-                style: GoogleFonts.poppins(fontSize: 6),
-              ),
-            ],
-          ),
-          Divider(color: color.withOpacity(0.2), height: 8),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSection('Experience', color),
-                    const SizedBox(height: 2),
-                    _buildExperienceItem(
-                        'Lead UX Designer', 'Design Studio Inc.', color),
-                    _buildExperienceItem(
-                        'UX Designer', 'Tech Solutions', color),
-                    const SizedBox(height: 4),
-                    _buildSection('Education', color),
-                    const SizedBox(height: 2),
-                    _buildExperienceItem(
-                        'Master in HCI', 'Design University', color),
-                    _buildExperienceItem(
-                        'BA in Design', 'State University', color),
-                  ],
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.email, size: 5, color: color),
+                const SizedBox(width: 2),
+                Text(
+                  'sarah@design.com',
+                  style: GoogleFonts.poppins(fontSize: 5),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSection('Skills', color),
-                    const SizedBox(height: 2),
-                    Wrap(
-                      spacing: 2,
-                      runSpacing: 2,
-                      children: [
-                        _buildSkillChip('UI/UX', color),
-                        _buildSkillChip('Figma', color),
-                        _buildSkillChip('Adobe XD', color),
-                        _buildSkillChip('Sketch', color),
-                      ],
-                    ),
-                  ],
+                const SizedBox(width: 4),
+                Icon(Icons.phone, size: 5, color: color),
+                const SizedBox(width: 2),
+                Text(
+                  '(555) 123-4567',
+                  style: GoogleFonts.poppins(fontSize: 5),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            Divider(color: color.withOpacity(0.2), height: 8),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSection('Experience', color),
+                      const SizedBox(height: 2),
+                      _buildExperienceItem(
+                          'Lead UX Designer', 'Design Studio Inc.', color),
+                      _buildExperienceItem(
+                          'UX Designer', 'Tech Solutions', color),
+                      const SizedBox(height: 2),
+                      _buildSection('Education', color),
+                      const SizedBox(height: 2),
+                      _buildExperienceItem(
+                          'Master in HCI', 'Design University', color),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSection('Skills', color),
+                      const SizedBox(height: 2),
+                      Wrap(
+                        spacing: 2,
+                        runSpacing: 2,
+                        children: [
+                          _buildSkillChip('UI/UX', color),
+                          _buildSkillChip('Figma', color),
+                          _buildSkillChip('Adobe XD', color),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -170,102 +170,91 @@ class ResumePreviewCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: color, width: 1),
-                bottom: BorderSide(color: color, width: 1),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: color, width: 1),
+                  bottom: BorderSide(color: color, width: 1),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'MICHAEL ANDERSON',
+                    style: GoogleFonts.poppins(
+                      fontSize: 8,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Financial Analyst',
+                    style: GoogleFonts.poppins(
+                      fontSize: 5,
+                      color: color,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
-            child: Column(
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Icon(Icons.email, size: 5, color: color),
+                const SizedBox(width: 2),
                 Text(
-                  'MICHAEL ANDERSON',
-                  style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1,
-                  ),
-                  textAlign: TextAlign.center,
+                  'michael@finance.com',
+                  style: GoogleFonts.poppins(fontSize: 5),
                 ),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: 1,
+                  height: 5,
+                  color: color,
+                ),
+                Icon(Icons.phone, size: 5, color: color),
+                const SizedBox(width: 2),
                 Text(
-                  'Financial Analyst',
-                  style: GoogleFonts.poppins(
-                    fontSize: 6,
-                    color: color,
-                  ),
-                  textAlign: TextAlign.center,
+                  '(555) 987-6543',
+                  style: GoogleFonts.poppins(fontSize: 5),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 6),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.email, size: 6, color: color),
-              const SizedBox(width: 2),
-              Text(
-                'michael@finance.com',
-                style: GoogleFonts.poppins(fontSize: 6),
-              ),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: 1,
-                height: 6,
-                color: color,
-              ),
-              Icon(Icons.phone, size: 6, color: color),
-              const SizedBox(width: 2),
-              Text(
-                '(555) 987-6543',
-                style: GoogleFonts.poppins(fontSize: 6),
-              ),
-            ],
-          ),
-          const SizedBox(height: 6),
-          _buildProfessionalSection(
-              'Experience',
-              [
-                _buildProfessionalItem(
-                    'Senior Financial Analyst', 'Global Investments', color),
-                _buildProfessionalItem(
-                    'Financial Analyst', 'Banking Corp', color),
-                _buildProfessionalItem(
-                    'Junior Analyst', 'Finance Solutions', color),
-              ],
-              color),
-          const SizedBox(height: 4),
-          _buildProfessionalSection(
-              'Education',
-              [
-                _buildProfessionalItem(
-                    'MBA in Finance', 'Business School', color),
-                _buildProfessionalItem(
-                    'BBA in Economics', 'State University', color),
-              ],
-              color),
-          const SizedBox(height: 4),
-          _buildProfessionalSection(
-              'Skills',
-              [
-                Wrap(
-                  spacing: 4,
-                  children: [
-                    _buildProfessionalSkill('Financial Modeling', color),
-                    _buildProfessionalSkill('Data Analysis', color),
-                    _buildProfessionalSkill('Risk Management', color),
-                    _buildProfessionalSkill('Excel', color),
-                  ],
-                ),
-              ],
-              color),
-        ],
+            const SizedBox(height: 4),
+            _buildProfessionalSection(
+                'Experience',
+                [
+                  _buildProfessionalItem(
+                      'Senior Financial Analyst', 'Global Investments', color),
+                  _buildProfessionalItem(
+                      'Financial Analyst', 'Banking Corp', color),
+                ],
+                color),
+            const SizedBox(height: 2),
+            _buildProfessionalSection(
+                'Skills',
+                [
+                  Wrap(
+                    spacing: 2,
+                    children: [
+                      _buildProfessionalSkill('Financial Modeling', color),
+                      _buildProfessionalSkill('Data Analysis', color),
+                    ],
+                  ),
+                ],
+                color),
+          ],
+        ),
       ),
     );
   }
@@ -288,7 +277,7 @@ class ResumePreviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 24,
+            width: 20,
             decoration: BoxDecoration(
               color: color.withOpacity(0.1),
               borderRadius: const BorderRadius.only(
@@ -297,68 +286,68 @@ class ResumePreviewCard extends StatelessWidget {
               ),
             ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 8),
                 Container(
-                  width: 16,
-                  height: 16,
+                  width: 14,
+                  height: 14,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: color,
                   ),
                   child: const Icon(
                     Icons.person,
-                    size: 10,
+                    size: 8,
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Icon(Icons.email, size: 8, color: color),
                 const SizedBox(height: 4),
-                Icon(Icons.phone, size: 8, color: color),
+                Icon(Icons.email, size: 6, color: color),
                 const SizedBox(height: 4),
-                Icon(Icons.location_on, size: 8, color: color),
+                Icon(Icons.phone, size: 6, color: color),
               ],
             ),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Alex Rivera',
-                  style: GoogleFonts.poppins(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Alex Rivera',
+                    style: GoogleFonts.poppins(
+                      fontSize: 7,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  'Creative Director',
-                  style: GoogleFonts.poppins(
-                    fontSize: 6,
-                    color: color,
-                    fontWeight: FontWeight.w500,
+                  Text(
+                    'Creative Director',
+                    style: GoogleFonts.poppins(
+                      fontSize: 5,
+                      color: color,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                _buildCreativeSection('Skills', color),
-                Wrap(
-                  spacing: 2,
-                  runSpacing: 2,
-                  children: [
-                    _buildCreativeSkill('Branding', color),
-                    _buildCreativeSkill('Art Direction', color),
-                    _buildCreativeSkill('Design', color),
-                    _buildCreativeSkill('Leadership', color),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                _buildCreativeSection('Experience', color),
-                _buildCreativeItem('Creative Director', 'Design Agency', color),
-                _buildCreativeItem('Art Director', 'Creative Studio', color),
-                _buildCreativeItem('Senior Designer', 'Media Group', color),
-              ],
+                  const SizedBox(height: 4),
+                  _buildCreativeSection('Skills', color),
+                  Wrap(
+                    spacing: 2,
+                    runSpacing: 2,
+                    children: [
+                      _buildCreativeSkill('Branding', color),
+                      _buildCreativeSkill('Design', color),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  _buildCreativeSection('Experience', color),
+                  _buildCreativeItem(
+                      'Creative Director', 'Design Agency', color),
+                  _buildCreativeItem('Art Director', 'Creative Studio', color),
+                ],
+              ),
             ),
           ),
         ],
@@ -380,53 +369,49 @@ class ResumePreviewCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Emily Chen',
-            style: GoogleFonts.poppins(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Emily Chen',
+              style: GoogleFonts.poppins(
+                fontSize: 8,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          Text(
-            'Marketing Manager',
-            style: GoogleFonts.poppins(
-              fontSize: 6,
-              color: Colors.grey[600],
+            Text(
+              'Marketing Manager',
+              style: GoogleFonts.poppins(
+                fontSize: 5,
+                color: Colors.grey[600],
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Container(
-            height: 0.5,
-            color: Colors.grey[300],
-          ),
-          const SizedBox(height: 6),
-          _buildMinimalSection('Experience', [
-            _buildMinimalItem('Marketing Manager', 'Tech Startup'),
-            _buildMinimalItem('Digital Marketing Lead', 'E-commerce Company'),
-            _buildMinimalItem('Marketing Specialist', 'Agency'),
-          ]),
-          const SizedBox(height: 6),
-          _buildMinimalSection('Education', [
-            _buildMinimalItem('MS in Marketing', 'Business University'),
-            _buildMinimalItem('BA in Communications', 'State College'),
-          ]),
-          const SizedBox(height: 6),
-          _buildMinimalSection('Skills', [
-            Wrap(
-              spacing: 4,
-              runSpacing: 2,
-              children: [
-                _buildMinimalSkill('Digital Marketing'),
-                _buildMinimalSkill('Social Media'),
-                _buildMinimalSkill('Analytics'),
-                _buildMinimalSkill('Content Strategy'),
-              ],
+            const SizedBox(height: 4),
+            Container(
+              height: 0.5,
+              color: Colors.grey[300],
             ),
-          ]),
-        ],
+            const SizedBox(height: 4),
+            _buildMinimalSection('Experience', [
+              _buildMinimalItem('Marketing Manager', 'Tech Startup'),
+              _buildMinimalItem('Digital Marketing Lead', 'E-commerce'),
+            ]),
+            const SizedBox(height: 4),
+            _buildMinimalSection('Skills', [
+              Wrap(
+                spacing: 2,
+                runSpacing: 2,
+                children: [
+                  _buildMinimalSkill('Digital Marketing'),
+                  _buildMinimalSkill('Social Media'),
+                  _buildMinimalSkill('Analytics'),
+                ],
+              ),
+            ]),
+          ],
+        ),
       ),
     );
   }
