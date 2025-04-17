@@ -1,439 +1,501 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import '../models/resume_data.dart';
+import 'resume_preview_page.dart';
 
 class ResumeFormPage extends StatefulWidget {
-  final String templateName;
-
-  const ResumeFormPage({super.key, required this.templateName});
+  const ResumeFormPage({super.key});
 
   @override
   State<ResumeFormPage> createState() => _ResumeFormPageState();
 }
 
 class _ResumeFormPageState extends State<ResumeFormPage> {
-  int _currentStep = 0;
   final _formKey = GlobalKey<FormState>();
+  String? _profileImagePath;
+  final List<TextEditingController> _skillControllers = [];
+  final List<int> _skillRatings = [];
+  final List<TextEditingController> _educationControllers = [];
+  final List<TextEditingController> _experienceControllers = [];
+  final List<String> _hobbies = [];
 
-  // Form data
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  List<TextEditingController> _contactControllers = [TextEditingController()];
-  List<SocialMedia> _socialMedia = [SocialMedia()];
-  List<Education> _education = [Education()];
-  List<Experience> _experience = [Experience()];
+  final _nameController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
+  final _summaryController = TextEditingController();
 
   @override
   void dispose() {
     _nameController.dispose();
+    _titleController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
     _addressController.dispose();
-    for (var controller in _contactControllers) {
+    _summaryController.dispose();
+    for (var controller in _skillControllers) {
       controller.dispose();
     }
-    for (var social in _socialMedia) {
-      social.dispose();
+    for (var controller in _educationControllers) {
+      controller.dispose();
     }
-    for (var edu in _education) {
-      edu.dispose();
-    }
-    for (var exp in _experience) {
-      exp.dispose();
+    for (var controller in _experienceControllers) {
+      controller.dispose();
     }
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      setState(() {
+        _profileImagePath = image.path;
+      });
+    }
+  }
+
+  void _addSkill() {
+    setState(() {
+      _skillControllers.add(TextEditingController());
+      _skillRatings.add(3); // Default rating
+    });
+  }
+
+  void _addEducation() {
+    setState(() {
+      _educationControllers.addAll([
+        TextEditingController(), // degree
+        TextEditingController(), // institution
+        TextEditingController(), // duration
+        TextEditingController(), // location
+      ]);
+    });
+  }
+
+  void _addExperience() {
+    setState(() {
+      _experienceControllers.addAll([
+        TextEditingController(), // position
+        TextEditingController(), // company
+        TextEditingController(), // duration
+        TextEditingController(), // location
+        TextEditingController(), // responsibilities
+      ]);
+    });
+  }
+
+  void _addHobby(String hobby) {
+    setState(() {
+      _hobbies.add(hobby);
+    });
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      final resumeData = ResumeData(
+        name: _nameController.text,
+        title: _titleController.text,
+        email: _emailController.text,
+        phone: _phoneController.text,
+        address: _addressController.text,
+        profileImagePath: _profileImagePath ?? '',
+        summary: _summaryController.text,
+        skills: List.generate(
+          _skillControllers.length,
+          (i) => Skill(
+            name: _skillControllers[i].text,
+            rating: _skillRatings[i],
+          ),
+        ),
+        education: List.generate(
+          _educationControllers.length ~/ 4,
+          (i) => Education(
+            degree: _educationControllers[i * 4].text,
+            institution: _educationControllers[i * 4 + 1].text,
+            duration: _educationControllers[i * 4 + 2].text,
+            location: _educationControllers[i * 4 + 3].text,
+          ),
+        ),
+        experience: List.generate(
+          _experienceControllers.length ~/ 5,
+          (i) => Experience(
+            position: _experienceControllers[i * 5].text,
+            company: _experienceControllers[i * 5 + 1].text,
+            duration: _experienceControllers[i * 5 + 2].text,
+            location: _experienceControllers[i * 5 + 3].text,
+            responsibilities: _experienceControllers[i * 5 + 4]
+                .text
+                .split('\n')
+                .where((line) => line.isNotEmpty)
+                .toList(),
+          ),
+        ),
+        hobbies: _hobbies,
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResumePreviewPage(resumeData: resumeData),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Create Resume',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF1E88E5),
-        foregroundColor: Colors.white,
+        title: Text('Create Resume', style: GoogleFonts.poppins()),
       ),
       body: Form(
         key: _formKey,
-        child: Stepper(
-          currentStep: _currentStep,
-          onStepContinue: () {
-            if (_currentStep < 5) {
-              setState(() {
-                _currentStep++;
-              });
-            }
-          },
-          onStepCancel: () {
-            if (_currentStep > 0) {
-              setState(() {
-                _currentStep--;
-              });
-            }
-          },
-          controlsBuilder: (context, details) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Row(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            // Profile Picture Section
+            Center(
+              child: Column(
                 children: [
-                  if (_currentStep > 0)
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: details.onStepCancel,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[200],
-                          foregroundColor: Colors.black87,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                        ),
-                        child: Text(
-                          'Back',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                  GestureDetector(
+                    onTap: _pickImage,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[200],
+                        image: _profileImagePath != null
+                            ? DecorationImage(
+                                image: FileImage(File(_profileImagePath!)),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
                       ),
+                      child: _profileImagePath == null
+                          ? const Icon(Icons.add_a_photo, size: 40)
+                          : null,
                     ),
-                  if (_currentStep > 0) const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: details.onStepContinue,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E88E5),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: Text(
-                        _currentStep == 5 ? 'Create Resume' : 'Next',
-                        style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
-                      ),
-                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Add Profile Picture',
+                    style: GoogleFonts.poppins(color: Colors.grey[600]),
                   ),
                 ],
               ),
-            );
-          },
-          steps: [
-            // Basic Information
-            Step(
-              title: Text('Basic Information', style: GoogleFonts.poppins()),
-              content: Column(
+            ),
+            const SizedBox(height: 24),
+
+            // Personal Information
+            _buildSection(
+              'Personal Information',
+              Column(
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: _inputDecoration('Full Name'),
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
+                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    validator: (value) => value?.isEmpty ?? true
+                        ? 'Please enter your name'
+                        : null,
                   ),
-                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _titleController,
+                    decoration:
+                        const InputDecoration(labelText: 'Professional Title'),
+                    validator: (value) => value?.isEmpty ?? true
+                        ? 'Please enter your title'
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) => value?.isEmpty ?? true
+                        ? 'Please enter your email'
+                        : null,
+                  ),
+                  TextFormField(
+                    controller: _phoneController,
+                    decoration: const InputDecoration(labelText: 'Phone'),
+                    validator: (value) => value?.isEmpty ?? true
+                        ? 'Please enter your phone'
+                        : null,
+                  ),
                   TextFormField(
                     controller: _addressController,
-                    decoration: _inputDecoration('Address'),
-                    maxLines: 2,
-                    validator: (value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'Please enter your address';
-                      }
-                      return null;
-                    },
+                    decoration: const InputDecoration(labelText: 'Address'),
+                    validator: (value) => value?.isEmpty ?? true
+                        ? 'Please enter your address'
+                        : null,
                   ),
                 ],
               ),
-              isActive: _currentStep >= 0,
             ),
 
-            // Contact Numbers
-            Step(
-              title: Text('Contact Numbers', style: GoogleFonts.poppins()),
-              content: Column(
+            // Professional Summary
+            _buildSection(
+              'Professional Summary',
+              TextFormField(
+                controller: _summaryController,
+                maxLines: 4,
+                decoration: const InputDecoration(
+                  hintText: 'Write a brief summary about yourself...',
+                ),
+                validator: (value) =>
+                    value?.isEmpty ?? true ? 'Please enter a summary' : null,
+              ),
+            ),
+
+            // Skills Section
+            _buildSection(
+              'Skills',
+              Column(
                 children: [
-                  ..._contactControllers.asMap().entries.map((entry) {
-                    int idx = entry.key;
-                    var controller = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                  ...List.generate(
+                    _skillControllers.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
                       child: Row(
                         children: [
                           Expanded(
                             child: TextFormField(
-                              controller: controller,
-                              decoration: _inputDecoration('Contact Number'),
-                              keyboardType: TextInputType.phone,
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter a contact number';
-                                }
-                                return null;
-                              },
+                              controller: _skillControllers[index],
+                              decoration:
+                                  const InputDecoration(labelText: 'Skill'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter a skill'
+                                  : null,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          if (_contactControllers.length > 1)
-                            IconButton(
-                              icon: const Icon(Icons.remove_circle_outline),
-                              color: Colors.red,
-                              onPressed: () => _removeContact(idx),
-                            ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: _addContact,
-                    icon: const Icon(Icons.add),
-                    label: Text('Add Contact', style: GoogleFonts.poppins()),
-                  ),
-                ],
-              ),
-              isActive: _currentStep >= 1,
-            ),
-
-            // Social Media
-            Step(
-              title: Text('Social Media', style: GoogleFonts.poppins()),
-              content: Column(
-                children: [
-                  ..._socialMedia.asMap().entries.map((entry) {
-                    int idx = entry.key;
-                    var social = entry.value;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: social.platformController,
-                                  decoration: _inputDecoration('Platform Name'),
-                                  validator: (value) {
-                                    if (value?.isEmpty ?? true) {
-                                      return 'Please enter platform name';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (_socialMedia.length > 1)
-                                IconButton(
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  color: Colors.red,
-                                  onPressed: () => _removeSocialMedia(idx),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: social.urlController,
-                            decoration: _inputDecoration('Profile URL'),
-                            validator: (value) {
-                              if (value?.isEmpty ?? true) {
-                                return 'Please enter profile URL';
-                              }
-                              return null;
+                          const SizedBox(width: 16),
+                          Slider(
+                            value: _skillRatings[index].toDouble(),
+                            min: 1,
+                            max: 5,
+                            divisions: 4,
+                            label: _skillRatings[index].toString(),
+                            onChanged: (value) {
+                              setState(() {
+                                _skillRatings[index] = value.round();
+                              });
                             },
                           ),
                         ],
                       ),
-                    );
-                  }).toList(),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
-                    onPressed: _addSocialMedia,
-                    icon: const Icon(Icons.add),
-                    label: Text(
-                      'Add Social Media',
-                      style: GoogleFonts.poppins(),
                     ),
                   ),
+                  ElevatedButton.icon(
+                    onPressed: _addSkill,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add Skill'),
+                  ),
                 ],
               ),
-              isActive: _currentStep >= 2,
             ),
 
-            // Education
-            Step(
-              title: Text('Education', style: GoogleFonts.poppins()),
-              content: Column(
+            // Education Section
+            _buildSection(
+              'Education',
+              Column(
                 children: [
-                  ..._education.asMap().entries.map((entry) {
-                    int idx = entry.key;
-                    var education = entry.value;
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 16),
+                  ...List.generate(
+                    _educationControllers.length ~/ 4,
+                    (index) => Card(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Education ${idx + 1}',
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                if (_education.length > 1)
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.remove_circle_outline,
-                                    ),
-                                    color: Colors.red,
-                                    onPressed: () => _removeEducation(idx),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: education.timeController,
-                              decoration: _inputDecoration('Time Period'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter time period';
-                                }
-                                return null;
-                              },
+                              controller: _educationControllers[index * 4],
+                              decoration:
+                                  const InputDecoration(labelText: 'Degree'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter degree'
+                                  : null,
                             ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: education.qualificationController,
-                              decoration: _inputDecoration('Qualification'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter qualification';
-                                }
-                                return null;
-                              },
+                              controller: _educationControllers[index * 4 + 1],
+                              decoration: const InputDecoration(
+                                  labelText: 'Institution'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter institution'
+                                  : null,
                             ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: education.instituteController,
-                              decoration: _inputDecoration('Institute'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter institute';
-                                }
-                                return null;
-                              },
+                              controller: _educationControllers[index * 4 + 2],
+                              decoration:
+                                  const InputDecoration(labelText: 'Duration'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter duration'
+                                  : null,
+                            ),
+                            TextFormField(
+                              controller: _educationControllers[index * 4 + 3],
+                              decoration:
+                                  const InputDecoration(labelText: 'Location'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter location'
+                                  : null,
                             ),
                           ],
                         ),
                       ),
-                    );
-                  }).toList(),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
+                    ),
+                  ),
+                  ElevatedButton.icon(
                     onPressed: _addEducation,
                     icon: const Icon(Icons.add),
-                    label: Text('Add Education', style: GoogleFonts.poppins()),
+                    label: const Text('Add Education'),
                   ),
                 ],
               ),
-              isActive: _currentStep >= 3,
             ),
 
-            // Experience
-            Step(
-              title: Text('Experience', style: GoogleFonts.poppins()),
-              content: Column(
+            // Experience Section
+            _buildSection(
+              'Experience',
+              Column(
                 children: [
-                  ..._experience.asMap().entries.map((entry) {
-                    int idx = entry.key;
-                    var experience = entry.value;
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 16),
+                  ...List.generate(
+                    _experienceControllers.length ~/ 5,
+                    (index) => Card(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Experience ${idx + 1}',
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                if (_experience.length > 1)
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.remove_circle_outline,
-                                    ),
-                                    color: Colors.red,
-                                    onPressed: () => _removeExperience(idx),
-                                  ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: experience.timeController,
-                              decoration: _inputDecoration('Time Period'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter time period';
-                                }
-                                return null;
-                              },
+                              controller: _experienceControllers[index * 5],
+                              decoration:
+                                  const InputDecoration(labelText: 'Position'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter position'
+                                  : null,
                             ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: experience.positionController,
-                              decoration: _inputDecoration('Position'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter position';
-                                }
-                                return null;
-                              },
+                              controller: _experienceControllers[index * 5 + 1],
+                              decoration:
+                                  const InputDecoration(labelText: 'Company'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter company'
+                                  : null,
                             ),
-                            const SizedBox(height: 12),
                             TextFormField(
-                              controller: experience.companyController,
-                              decoration: _inputDecoration('Company'),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter company';
-                                }
-                                return null;
-                              },
+                              controller: _experienceControllers[index * 5 + 2],
+                              decoration:
+                                  const InputDecoration(labelText: 'Duration'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter duration'
+                                  : null,
+                            ),
+                            TextFormField(
+                              controller: _experienceControllers[index * 5 + 3],
+                              decoration:
+                                  const InputDecoration(labelText: 'Location'),
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter location'
+                                  : null,
+                            ),
+                            TextFormField(
+                              controller: _experienceControllers[index * 5 + 4],
+                              decoration: const InputDecoration(
+                                labelText: 'Responsibilities',
+                                hintText:
+                                    'Enter each responsibility on a new line',
+                              ),
+                              maxLines: 4,
+                              validator: (value) => value?.isEmpty ?? true
+                                  ? 'Please enter responsibilities'
+                                  : null,
                             ),
                           ],
                         ),
                       ),
-                    );
-                  }).toList(),
-                  const SizedBox(height: 8),
-                  OutlinedButton.icon(
+                    ),
+                  ),
+                  ElevatedButton.icon(
                     onPressed: _addExperience,
                     icon: const Icon(Icons.add),
-                    label: Text('Add Experience', style: GoogleFonts.poppins()),
+                    label: const Text('Add Experience'),
                   ),
                 ],
               ),
-              isActive: _currentStep >= 4,
             ),
 
-            // Review
-            Step(
-              title: Text('Review', style: GoogleFonts.poppins()),
-              content: Column(
+            // Hobbies Section
+            _buildSection(
+              'Hobbies',
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Please review your information before creating the resume.',
-                    style: GoogleFonts.poppins(fontSize: 16),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ..._hobbies.map(
+                        (hobby) => Chip(
+                          label: Text(hobby),
+                          onDeleted: () {
+                            setState(() {
+                              _hobbies.remove(hobby);
+                            });
+                          },
+                        ),
+                      ),
+                      ActionChip(
+                        avatar: const Icon(Icons.add),
+                        label: const Text('Add Hobby'),
+                        onPressed: () async {
+                          final controller = TextEditingController();
+                          final result = await showDialog<String>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Add Hobby'),
+                              content: TextField(
+                                controller: controller,
+                                decoration: const InputDecoration(
+                                    hintText: 'Enter hobby'),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, controller.text),
+                                  child: const Text('Add'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (result != null && result.isNotEmpty) {
+                            _addHobby(result);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-              isActive: _currentStep >= 5,
+            ),
+
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.all(16),
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(
+                'Preview Resume',
+                style: GoogleFonts.poppins(fontSize: 16),
+              ),
             ),
           ],
         ),
@@ -441,98 +503,23 @@ class _ResumeFormPageState extends State<ResumeFormPage> {
     );
   }
 
-  InputDecoration _inputDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: GoogleFonts.poppins(),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  Widget _buildSection(String title, Widget content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+        content,
+        const SizedBox(height: 16),
+      ],
     );
-  }
-
-  void _addContact() {
-    setState(() {
-      _contactControllers.add(TextEditingController());
-    });
-  }
-
-  void _removeContact(int index) {
-    setState(() {
-      _contactControllers[index].dispose();
-      _contactControllers.removeAt(index);
-    });
-  }
-
-  void _addSocialMedia() {
-    setState(() {
-      _socialMedia.add(SocialMedia());
-    });
-  }
-
-  void _removeSocialMedia(int index) {
-    setState(() {
-      _socialMedia[index].dispose();
-      _socialMedia.removeAt(index);
-    });
-  }
-
-  void _addEducation() {
-    setState(() {
-      _education.add(Education());
-    });
-  }
-
-  void _removeEducation(int index) {
-    setState(() {
-      _education[index].dispose();
-      _education.removeAt(index);
-    });
-  }
-
-  void _addExperience() {
-    setState(() {
-      _experience.add(Experience());
-    });
-  }
-
-  void _removeExperience(int index) {
-    setState(() {
-      _experience[index].dispose();
-      _experience.removeAt(index);
-    });
-  }
-}
-
-class SocialMedia {
-  final TextEditingController platformController = TextEditingController();
-  final TextEditingController urlController = TextEditingController();
-
-  void dispose() {
-    platformController.dispose();
-    urlController.dispose();
-  }
-}
-
-class Education {
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController qualificationController = TextEditingController();
-  final TextEditingController instituteController = TextEditingController();
-
-  void dispose() {
-    timeController.dispose();
-    qualificationController.dispose();
-    instituteController.dispose();
-  }
-}
-
-class Experience {
-  final TextEditingController timeController = TextEditingController();
-  final TextEditingController positionController = TextEditingController();
-  final TextEditingController companyController = TextEditingController();
-
-  void dispose() {
-    timeController.dispose();
-    positionController.dispose();
-    companyController.dispose();
   }
 }
