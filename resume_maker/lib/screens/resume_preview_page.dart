@@ -6,42 +6,6 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import '../models/resume_data.dart';
 
-class ResumeData {
-  final String name;
-  final String address;
-  final List<String> contactNumbers;
-  final List<Map<String, String>> socialMedia;
-  final List<Map<String, String>> education;
-  final List<Map<String, String>> experience;
-  final String templateName;
-  final String accentColor;
-  final String profileImagePath;
-  final String title;
-  final String email;
-  final String phone;
-  final String summary;
-  final List<String> skills;
-  final List<String> hobbies;
-
-  ResumeData({
-    required this.name,
-    required this.address,
-    required this.contactNumbers,
-    required this.socialMedia,
-    required this.education,
-    required this.experience,
-    required this.templateName,
-    required this.accentColor,
-    required this.profileImagePath,
-    required this.title,
-    required this.email,
-    required this.phone,
-    required this.summary,
-    required this.skills,
-    required this.hobbies,
-  });
-}
-
 class ResumePreviewPage extends StatelessWidget {
   final ResumeData resumeData;
 
@@ -439,75 +403,152 @@ class ResumePreviewPage extends StatelessWidget {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text(
-                resumeData.name,
-                style: pw.TextStyle(
-                  fontSize: 24,
-                  fontWeight: pw.FontWeight.bold,
-                ),
+              pw.Row(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          resumeData.name,
+                          style: pw.TextStyle(
+                            fontSize: 24,
+                            fontWeight: pw.FontWeight.bold,
+                          ),
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Text(
+                          resumeData.title,
+                          style: pw.TextStyle(
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColor.fromHex(resumeData.accentColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              pw.SizedBox(height: 8),
-              pw.Text(resumeData.address),
               pw.SizedBox(height: 20),
 
               // Contact Information
-              _buildPDFSection(
-                'Contact Information',
-                resumeData.contactNumbers
-                    .map((number) => pw.Text(number))
-                    .toList(),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                children: [
+                  pw.Text(resumeData.email),
+                  pw.Text(resumeData.phone),
+                  pw.Text(resumeData.address),
+                ],
               ),
 
-              // Social Media
-              if (resumeData.socialMedia.isNotEmpty)
-                _buildPDFSection(
-                  'Social Media',
-                  resumeData.socialMedia
-                      .map(
-                        (social) =>
-                            pw.Text('${social['platform']}: ${social['url']}'),
-                      )
-                      .toList(),
-                ),
+              pw.SizedBox(height: 20),
 
-              // Education
-              if (resumeData.education.isNotEmpty)
-                _buildPDFSection(
-                  'Education',
-                  resumeData.education.map((edu) {
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          edu['qualification']!,
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                        ),
-                        pw.Text(edu['institute']!),
-                        pw.Text(edu['time']!),
-                        pw.SizedBox(height: 8),
-                      ],
-                    );
-                  }).toList(),
-                ),
+              // Professional Summary
+              _buildPDFSection(
+                'Professional Summary',
+                [pw.Text(resumeData.summary)],
+              ),
 
               // Experience
-              if (resumeData.experience.isNotEmpty)
-                _buildPDFSection(
-                  'Experience',
-                  resumeData.experience.map((exp) {
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          exp['position']!,
-                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              _buildPDFSection(
+                'Experience',
+                resumeData.experience.map((exp) {
+                  return pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        exp.position,
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.Text('${exp.company} • ${exp.duration}'),
+                      pw.Text(exp.location),
+                      if (exp.responsibilities.isNotEmpty) ...[
+                        pw.SizedBox(height: 4),
+                        ...exp.responsibilities.map(
+                          (resp) => pw.Padding(
+                            padding: const pw.EdgeInsets.only(left: 12),
+                            child: pw.Text('• $resp'),
+                          ),
                         ),
-                        pw.Text(exp['company']!),
-                        pw.Text(exp['time']!),
-                        pw.SizedBox(height: 8),
                       ],
-                    );
-                  }).toList(),
+                      pw.SizedBox(height: 8),
+                    ],
+                  );
+                }).toList(),
+              ),
+
+              // Education
+              _buildPDFSection(
+                'Education',
+                resumeData.education.map((edu) {
+                  return pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        edu.degree,
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                      ),
+                      pw.Text(edu.institution),
+                      pw.Text('${edu.duration} • ${edu.location}'),
+                      pw.SizedBox(height: 8),
+                    ],
+                  );
+                }).toList(),
+              ),
+
+              // Skills
+              _buildPDFSection(
+                'Skills',
+                [
+                  pw.Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: resumeData.skills.map((skill) {
+                      return pw.Container(
+                        padding: const pw.EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 4,
+                        ),
+                        decoration: pw.BoxDecoration(
+                          borderRadius: pw.BorderRadius.circular(4),
+                          color: PdfColor.fromHex(resumeData.accentColor)
+                              .shade(0.1),
+                        ),
+                        child: pw.Text(
+                          '${skill.name} ${List.filled(skill.rating, '★').join()}',
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+
+              // Hobbies
+              if (resumeData.hobbies.isNotEmpty)
+                _buildPDFSection(
+                  'Hobbies',
+                  [
+                    pw.Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: resumeData.hobbies.map((hobby) {
+                        return pw.Container(
+                          padding: const pw.EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: pw.BoxDecoration(
+                            borderRadius: pw.BorderRadius.circular(4),
+                            color: PdfColor.fromHex(resumeData.accentColor)
+                                .shade(0.1),
+                          ),
+                          child: pw.Text(hobby),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
             ],
           );
@@ -549,12 +590,21 @@ class ResumePreviewPage extends StatelessWidget {
       children: [
         pw.SizedBox(height: 16),
         pw.Text(
-          title,
-          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+          title.toUpperCase(),
+          style: pw.TextStyle(
+            fontSize: 16,
+            fontWeight: pw.FontWeight.bold,
+            color: PdfColor.fromHex(resumeData.accentColor),
+          ),
         ),
-        pw.Divider(),
-        pw.SizedBox(height: 8),
+        pw.Container(
+          width: 32,
+          height: 2,
+          margin: const pw.EdgeInsets.symmetric(vertical: 8),
+          color: PdfColor.fromHex(resumeData.accentColor),
+        ),
         ...content,
+        pw.SizedBox(height: 16),
       ],
     );
   }

@@ -6,7 +6,14 @@ import '../models/resume_data.dart';
 import 'resume_preview_page.dart';
 
 class ResumeFormPage extends StatefulWidget {
-  const ResumeFormPage({super.key});
+  final String templateName;
+  final String accentColor;
+
+  const ResumeFormPage({
+    super.key,
+    required this.templateName,
+    required this.accentColor,
+  });
 
   @override
   State<ResumeFormPage> createState() => _ResumeFormPageState();

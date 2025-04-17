@@ -9,285 +9,114 @@ class SelectTemplatePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Select Template',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color(0xFF1E88E5),
-        foregroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
+        title: Text('Select Template', style: GoogleFonts.poppins()),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: GridView.count(
+        crossAxisCount: 2,
+        padding: const EdgeInsets.all(16),
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
         children: [
-          // Header Section
-          Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Choose your template',
-                  style: GoogleFonts.poppins(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Select a template to start creating your professional resume',
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+          _buildTemplateCard(
+            context,
+            'Modern',
+            'A clean and modern design with a sidebar',
+            '#1E88E5',
+            'assets/images/template1.png',
           ),
-
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search templates',
-                  hintStyle: GoogleFonts.poppins(
-                    color: Colors.grey[400],
-                    fontSize: 15,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey[400],
-                    size: 22,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                ),
-              ),
-            ),
+          _buildTemplateCard(
+            context,
+            'Professional',
+            'Traditional layout with a professional look',
+            '#2E7D32',
+            'assets/images/template2.png',
           ),
-
-          const SizedBox(height: 20),
-
-          // Categories
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildCategoryChip('All', true),
-                _buildCategoryChip('Professional', false),
-                _buildCategoryChip('Minimalist', false),
-                _buildCategoryChip('Simple', false),
-                _buildCategoryChip('Modern', false),
-                _buildCategoryChip('Creative', false),
-              ],
-            ),
+          _buildTemplateCard(
+            context,
+            'Creative',
+            'Unique design for creative professionals',
+            '#C2185B',
+            'assets/images/template3.png',
           ),
-
-          const SizedBox(height: 20),
-
-          // Templates Grid
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 20,
-              ),
-              itemCount: 6,
-              itemBuilder: (context, index) {
-                final templates = const [
-                  {'name': 'Celeste', 'type': 'Professional', 'new': true},
-                  {'name': 'Aurora', 'type': 'Professional', 'new': false},
-                  {'name': 'Bianca', 'type': 'Modern', 'new': true},
-                  {'name': 'Estella', 'type': 'Professional', 'new': false},
-                  {'name': 'Sarah', 'type': 'Simple', 'new': false},
-                  {'name': 'Monica', 'type': 'Minimalist', 'new': true},
-                ];
-                final template = templates[index];
-                return _buildTemplateCard(
-                  context,
-                  template['name'] as String,
-                  template['type'] as String,
-                  template['new'] as bool,
-                );
-              },
-            ),
+          _buildTemplateCard(
+            context,
+            'Minimal',
+            'Simple and elegant design',
+            '#455A64',
+            'assets/images/template4.png',
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryChip(String label, bool isSelected) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFF1E88E5) : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isSelected ? const Color(0xFF1E88E5) : Colors.grey[300]!,
-              ),
-              boxShadow:
-                  isSelected
-                      ? [
-                        BoxShadow(
-                          color: const Color(0xFF1E88E5).withOpacity(0.3),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                      : null,
-            ),
-            child: Text(
-              label,
-              style: GoogleFonts.poppins(
-                color: isSelected ? Colors.white : Colors.grey[700],
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                fontSize: 14,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildTemplateCard(
     BuildContext context,
-    String name,
-    String type,
-    bool isNew,
+    String title,
+    String description,
+    String accentColor,
+    String imagePath,
   ) {
-    return Material(
-      color: Colors.transparent,
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: InkWell(
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ResumeFormPage(templateName: name),
+              builder: (context) => ResumeFormPage(
+                templateName: title,
+                accentColor: accentColor,
+              ),
             ),
           );
         },
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Template Preview
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(16),
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Icon(
-                          Icons.description_outlined,
-                          size: 40,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      if (isNew)
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1E88E5),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              'NEW',
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(int.parse(accentColor.replaceAll('#', '0xFF')))
+                      .withOpacity(0.1),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.description,
+                    size: 64,
+                    color:
+                        Color(int.parse(accentColor.replaceAll('#', '0xFF'))),
                   ),
                 ),
               ),
-              // Template Info
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black87,
-                      ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      type,
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                      ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[600],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
