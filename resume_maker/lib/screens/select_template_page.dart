@@ -794,11 +794,14 @@ class SelectTemplatePage extends StatelessWidget {
                     ),
                     child: Stack(
                       children: [
-                        Center(
-                          child: Icon(
-                            icon,
-                            size: 48,
-                            color: color.withOpacity(0.5),
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Center(
+                            child: ResumePreviewCard(
+                              accentColor:
+                                  '#${color.value.toRadixString(16).substring(2)}',
+                              templateName: name,
+                            ),
                           ),
                         ),
                         if (isNew)
