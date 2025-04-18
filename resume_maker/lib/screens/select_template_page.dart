@@ -792,43 +792,15 @@ class SelectTemplatePage extends StatelessWidget {
                         top: Radius.circular(16),
                       ),
                     ),
-                    child: Stack(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Center(
-                            child: ResumePreviewCard(
-                              accentColor:
-                                  '#${color.value.toRadixString(16).substring(2)}',
-                              templateName: name,
-                            ),
-                          ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Center(
+                        child: ResumePreviewCard(
+                          accentColor:
+                              '#${color.value.toRadixString(16).substring(2)}',
+                          templateName: name,
                         ),
-                        if (isNew)
-                          Positioned(
-                            top: 12,
-                            right: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                'NEW',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
-                                      fontSize: 10,
-                                    ),
-                              ),
-                            ),
-                          ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
