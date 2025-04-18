@@ -104,7 +104,7 @@ class _TemplatesPageState extends State<TemplatesPage> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.65,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
@@ -114,39 +114,32 @@ class _TemplatesPageState extends State<TemplatesPage> {
                 {
                   'name': 'Modern',
                   'type': 'Modern',
-                  'new': true,
                   'color': const Color(0xFF2196F3),
-                  'description':
-                      'Clean and contemporary design with a focus on readability',
+                  'description': 'Clean and contemporary design',
                 },
                 {
                   'name': 'Professional',
                   'type': 'Professional',
-                  'new': false,
                   'color': const Color(0xFF4CAF50),
-                  'description': 'Traditional layout with a professional touch',
+                  'description': 'Traditional layout',
                 },
                 {
                   'name': 'Creative',
                   'type': 'Creative',
-                  'new': true,
                   'color': const Color(0xFF9C27B0),
-                  'description': 'Unique design for creative professionals',
+                  'description': 'Unique design for creatives',
                 },
                 {
                   'name': 'Minimal',
                   'type': 'Minimal',
-                  'new': false,
                   'color': const Color(0xFF607D8B),
-                  'description':
-                      'Simple and elegant design with minimal distractions',
+                  'description': 'Simple and elegant design',
                 },
               ];
               final template = templates[index];
               return _buildTemplateCard(
                 template['name'] as String,
                 template['type'] as String,
-                template['new'] as bool,
                 template['color'] as Color,
                 template['description'] as String,
               );
@@ -195,7 +188,6 @@ class _TemplatesPageState extends State<TemplatesPage> {
   Widget _buildTemplateCard(
     String name,
     String type,
-    bool isNew,
     Color color,
     String description,
   ) {
@@ -219,9 +211,9 @@ class _TemplatesPageState extends State<TemplatesPage> {
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: color.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -229,9 +221,10 @@ class _TemplatesPageState extends State<TemplatesPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 5,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: color.withOpacity(0.1),
+                      color: color.withOpacity(0.05),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(16),
                       ),
@@ -248,53 +241,117 @@ class _TemplatesPageState extends State<TemplatesPage> {
                             ),
                           ),
                         ),
-                        if (isNew)
-                          Positioned(
-                            top: 12,
-                            right: 12,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                'NEW',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(
-                                      fontSize: 10,
-                                    ),
-                              ),
+                        Positioned(
+                          top: 12,
+                          right: 12,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: color.withOpacity(0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_rounded,
+                              color: color,
+                              size: 16,
                             ),
                           ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: color.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                _getTemplateIcon(name),
+                                color: color,
+                                size: 16,
+                              ),
                             ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                name,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: color,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          description,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                            height: 1.2,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 32,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TemplateCoverPage(templateName: name),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                              backgroundColor: color.withOpacity(0.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Use Template',
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: color,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: color,
+                                  size: 14,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -303,5 +360,20 @@ class _TemplatesPageState extends State<TemplatesPage> {
         ),
       ),
     );
+  }
+
+  IconData _getTemplateIcon(String templateName) {
+    switch (templateName) {
+      case 'Modern':
+        return Icons.design_services_rounded;
+      case 'Professional':
+        return Icons.business_center_rounded;
+      case 'Creative':
+        return Icons.palette_rounded;
+      case 'Minimal':
+        return Icons.format_shapes_rounded;
+      default:
+        return Icons.description_rounded;
+    }
   }
 }
