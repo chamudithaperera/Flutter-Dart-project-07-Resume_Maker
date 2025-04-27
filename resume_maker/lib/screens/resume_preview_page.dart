@@ -31,27 +31,27 @@ class ResumePreviewPage extends StatefulWidget {
 
 class _ResumePreviewPageState extends State<ResumePreviewPage> {
   final List<ColorTheme> colorThemes = [
-    ColorTheme(
+    const ColorTheme(
       name: 'Professional Blue',
       color: '#2B547E',
       icon: Icons.business,
     ),
-    ColorTheme(
+    const ColorTheme(
       name: 'Forest Green',
       color: '#2E8B57',
       icon: Icons.nature,
     ),
-    ColorTheme(
+    const ColorTheme(
       name: 'Royal Purple',
       color: '#7851A9',
       icon: Icons.style,
     ),
-    ColorTheme(
+    const ColorTheme(
       name: 'Deep Maroon',
       color: '#800000',
       icon: Icons.format_color_fill,
     ),
-    ColorTheme(
+    const ColorTheme(
       name: 'Charcoal Gray',
       color: '#36454F',
       icon: Icons.contrast,
@@ -283,7 +283,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
                       const SizedBox(height: 16),
 
                       // Contact Information
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: Wrap(
                           spacing: 16,
@@ -303,7 +303,7 @@ class _ResumePreviewPageState extends State<ResumePreviewPage> {
                       // Social Media Links
                       if (widget.resumeData.socialMedia.isNotEmpty) ...[
                         const SizedBox(height: 16),
-                        Container(
+                        SizedBox(
                           width: double.infinity,
                           child: Wrap(
                             spacing: 16,

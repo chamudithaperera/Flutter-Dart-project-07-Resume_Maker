@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../services/template_service.dart';
 import 'template_cover_page.dart';
 
 class ResumePreviewCard extends StatelessWidget {

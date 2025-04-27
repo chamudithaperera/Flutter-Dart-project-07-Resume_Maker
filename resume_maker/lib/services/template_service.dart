@@ -18,7 +18,7 @@ class Template {
 
 class TemplateService {
   final Map<String, Template> _templates = {
-    'Modern': Template(
+    'Modern': const Template(
       name: 'Modern',
       description:
           'A clean and contemporary design with a focus on readability and visual hierarchy.',
@@ -29,9 +29,9 @@ class TemplateService {
         'Skill rating visualization',
         'Modern color scheme',
       ],
-      accentColor: const Color(0xFF2196F3),
+      accentColor: Color(0xFF2196F3),
     ),
-    'Professional': Template(
+    'Professional': const Template(
       name: 'Professional',
       description:
           'A traditional resume layout optimized for ATS systems and formal applications.',
@@ -42,9 +42,9 @@ class TemplateService {
         'Traditional layout',
         'Professional styling',
       ],
-      accentColor: const Color(0xFF4CAF50),
+      accentColor: Color(0xFF4CAF50),
     ),
-    'Creative': Template(
+    'Creative': const Template(
       name: 'Creative',
       description:
           'A unique and eye-catching design for creative professionals and portfolios.',
@@ -55,9 +55,9 @@ class TemplateService {
         'Creative typography',
         'Dynamic content placement',
       ],
-      accentColor: const Color(0xFF9C27B0),
+      accentColor: Color(0xFF9C27B0),
     ),
-    'Minimal': Template(
+    'Minimal': const Template(
       name: 'Minimal',
       description:
           'A simple and elegant design that puts focus on your content.',
@@ -68,7 +68,7 @@ class TemplateService {
         'Clean typography',
         'Subtle accents',
       ],
-      accentColor: const Color(0xFF607D8B),
+      accentColor: Color(0xFF607D8B),
     ),
   };
 
