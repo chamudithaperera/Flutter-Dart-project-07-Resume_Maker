@@ -67,6 +67,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Flutter team for the amazing framework
 - All contributors who have helped improve this project
 
----
-
-Made with ❤️ using Flutter
