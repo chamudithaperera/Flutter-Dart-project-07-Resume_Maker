@@ -14,7 +14,7 @@ A Flutter application that helps users create professional resumes with ease.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/ChamudithaKavishan/Flutter-Dart-project-07-Resume_Maker.git
+git clone https://github.com/chamudithaperera/Flutter-Dart-project-07-Resume_Maker.git
 ```
 
 2. Navigate to the project directory:
